@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class Main {
+public class Main{
 
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -26,19 +26,23 @@ public class Main {
 				B[i] = Integer.parseInt(st.nextToken());
 			}
 			
-			//입력완료
-			//A, B 내림차순으로 정렬하기
-			Arrays.sort(A,Collections.reverseOrder());
-			Arrays.sort(B,Collections.reverseOrder());
-
-			int cnt = 0; // 쌍의 개수
+			//이진탐색 방법
+			Arrays.sort(B); //B 오름차순 정렬
+			int cnt = 0;
+			
 			for(int i = 0; i<N; i++) {
-				for(int j = 0; j<M; j++) {
-					if(A[i] > B[j]) {
-						cnt += M-j;
-						break;
+				int start = 0;
+				int end = M-1;
+				
+				while(start <= end) { //탐색 구간 길이가 1 이상
+					int mid = (start+end)/2;
+					if(B[mid] < A[i]) {
+						start = mid + 1;
+					}else {
+						end = mid - 1;
 					}
 				}
+				cnt += start;
 			}
 			System.out.println(cnt);
 		}
