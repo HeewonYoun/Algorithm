@@ -15,15 +15,15 @@ public class Main {
 		
 		cookies = new int[N];
 		st = new StringTokenizer(br.readLine());
+		int max = 0;
 		
 		for(int i = 0; i<N; i++) {
 			cookies[i] = Integer.parseInt(st.nextToken());
+			if(cookies[i] > max) max = cookies[i];
 		}
-		
-		Arrays.sort(cookies);
-		
+
 		long start = 1;
-		long end = cookies[N-1];
+		long end = max;
 		
 		while(start<=end) {
 			long mid = (start + end)/2;
