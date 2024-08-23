@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -11,9 +10,12 @@ public class Main {
 
     static int R, C;
     static char[][] map;
-    static int result = Integer.MIN_VALUE;
-    static HashMap<Character, Integer> alpha = new HashMap<>();
-    static boolean[][] visited;
+    static int result = 0;
+//    static HashMap<Character, Integer> alpha = new HashMap<>(); -> 알파벳 개수에 비해 메모리를 많이 사용함
+//    static boolean[][] visited; 알파벳이 중복되지 않으면 자동으로 칸의 중복 방문이 방지됨 -> 없어도 문제 없음
+
+    static boolean[] visited = new boolean[26]; //알파벳 방문 체크
+
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -23,7 +25,6 @@ public class Main {
         C = Integer.parseInt(st.nextToken()); //열
 
         map = new char[R][C];
-        visited = new boolean[R][C];
 
         for(int i = 0; i<R; i++){
             char[] tmp = br.readLine().toCharArray();
@@ -32,17 +33,14 @@ public class Main {
             }
         }
 
-        visited[0][0] = true;
-        alpha.put(map[0][0], 1);
+        visited[map[0][0] - 'A'] = true;
         dfs(0,0, 1);
 
         System.out.println(result);
     }
 
     static void dfs(int sx, int sy, int cnt){
-        if(cnt > result){
-            result = cnt;
-        }
+        result = Math.max(result, cnt);
 
         //반복 & 원상복구
         for(int i = 0; i<4; i++){
@@ -50,15 +48,12 @@ public class Main {
             int ny = sy + dy[i];
 
             if(nx < 0 || ny < 0 || nx >= R || ny >= C) continue;
-            if(visited[nx][ny]) continue;
-            if(alpha.containsKey(map[nx][ny])) continue;
+            if(visited[map[nx][ny] - 'A']) continue; //방문체크
 
-            visited[nx][ny] = true;
-            alpha.put(map[nx][ny] , 1);
+            visited[map[nx][ny]-'A'] = true;
             dfs(nx, ny, cnt + 1);
 
-            visited[nx][ny] = false;
-            alpha.remove(map[nx][ny]);
+            visited[map[nx][ny]-'A'] = false;
         }
     }
 }
