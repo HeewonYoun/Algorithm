@@ -8,6 +8,7 @@ public class Main {
     static int k;
     static int[] nums;
     static boolean[] visited;
+    static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -27,19 +28,21 @@ public class Main {
 
             //kC6 (6개 숫자 고르는 경우의수 사전순)
             select(0, 0);
-
-            System.out.println();
+            sb.append("\n");
         }
+        System.out.print(sb);
     }
 
     static void select(int start, int count){
         if(count == 6){
             for(int i = 0; i<k ;i++){
                 if(visited[i]){
-                    System.out.print(nums[i] + " ");
+//                    System.out.print(nums[i] + " ");
+                    sb.append(nums[i]).append(" ");
                 }
             }
-            System.out.println();
+//            System.out.println();
+            sb.append("\n");
             return;
         }
 
