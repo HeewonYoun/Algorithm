@@ -11,29 +11,25 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
 
-        int minPrice = 1000000001;
-        int totalLength = 0;
 
         N = Integer.parseInt(br.readLine()); //도시 개수
-        int[] length = new int[N];
-        int[] cost = new int[N];
+        long [] length = new long[N-1];
+        long [] cost = new long[N];
 
         st = new StringTokenizer(br.readLine());
         for(int i = 0; i<N-1; i++){ //도로 길이
-            length[i] = Integer.parseInt(st.nextToken());
-            totalLength += length[i];
+            length[i] = Long.parseLong(st.nextToken());
         }
 
         st = new StringTokenizer(br.readLine());
         for(int i = 0; i<N; i++){ //가격
-            cost[i] = Integer.parseInt(st.nextToken());
-            if(cost[i] < minPrice) minPrice = cost[i];
+            cost[i] = Long.parseLong(st.nextToken());
         }
 
-        long result = 0;
-        int minCost = cost[0];
+        long result = cost[0] * length[0]; //처음 주유소 이용
+        long minCost = cost[0];
 
-        for(int i = 0; i<N-1; i++){
+        for(int i = 1; i<N-1; i++){
             if(cost[i] < minCost){
                 minCost = cost[i];
             }
