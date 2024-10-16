@@ -14,8 +14,8 @@ public class Main {
 
         N = Integer.parseInt(br.readLine());
         isTeam = new boolean[N+1];
-
         point = new int[N+1][N+1];
+        
         for(int i = 1; i<N+1; i++){
             st = new StringTokenizer(br.readLine());
             for(int j = 1; j<N+1; j++){
@@ -66,18 +66,14 @@ public class Main {
 
         //능력치 계산
         for(int i = 0; i<teamS.size(); i++){
-            for(int j = 0; j<teamS.size(); j++){
-                if(i == j) continue;
-
-                totalS += point[teamS.get(i)][teamS.get(j)];
+            for(int j = i+1; j<teamS.size(); j++){
+                totalS += point[teamS.get(i)][teamS.get(j)] + point[teamS.get(j)][teamS.get(i)] ;
             }
         }
 
         for(int i = 0; i<teamL.size(); i++){
-            for(int j = 0; j<teamL.size(); j++){
-                if(i == j) continue;
-
-                totalL += point[teamL.get(i)][teamL.get(j)];
+            for(int j = i+1; j<teamL.size(); j++){
+                totalL += point[teamL.get(i)][teamL.get(j)] + point[teamL.get(j)][teamL.get(i)];
             }
         }
 
