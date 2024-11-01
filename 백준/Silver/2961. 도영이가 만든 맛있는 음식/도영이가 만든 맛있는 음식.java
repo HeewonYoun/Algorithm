@@ -2,54 +2,67 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	
-	static int[][] data;
-	static int n;
-	static boolean[] isSelected;
-	static int cha = 999999999;
-	
 
-	public static void main(String[] args) throws NumberFormatException, IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    static int N;
+    static List<int[]> taste = new ArrayList<>();
+    static int result = Integer.MAX_VALUE;
+    static boolean[] select;
 
-		n = Integer.parseInt(br.readLine()); // 재료의 개수
-		data = new int[n][2];
-		isSelected = new boolean[n];
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
 
-		for (int i = 0; i < n; i++) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			data[i][0] = Integer.parseInt(st.nextToken()); //신맛
-			data[i][1] = Integer.parseInt(st.nextToken()); //쓴맛
-		}
-		ps(0,0);
-		System.out.println(cha);
-	}
+        N = Integer.parseInt(br.readLine()); //재료의 개수
+        select = new boolean[N];
 
-	
-	static void ps(int cnt, int sc) {
-		if(cnt == n) {
-			int ssum = 1; //신맛 곱
-			int bsum = 0; //쓴맛 합
-			if(sc > 0) {
-				for(int i = 0; i<n;i++) {
-					if(isSelected[i]) {
-						ssum *= data[i][0];
-						bsum += data[i][1];
-					}
-					
-				}
-				if(Math.abs(ssum-bsum)<cha) {
-					cha = Math.abs(ssum-bsum);
-				}
-			}
-			return;
-		}
-		
-		isSelected[cnt]=true;
-		ps(cnt+1,sc+1);
-		isSelected[cnt]=false;
-		ps(cnt+1,sc);
-		
-	}
+        for(int i = 0; i<N; i++){
+            st = new StringTokenizer(br.readLine());
+            int S = Integer.parseInt(st.nextToken()); //신맛
+            int B = Integer.parseInt(st.nextToken()); //쓴맛
+
+            taste.add(new int[]{S, B});
+        }
+
+        if(N == 1){ //재료 하나인 경우
+            System.out.println(Math.abs(taste.get(0)[0] - taste.get(0)[1]));
+            return;
+        }
+
+        //신맛: * , 쓴맛: +
+        //신맛, 쓴맛 차이 작게, 재료 적어도 하나 사용
+
+        for(int i = 1; i<=N; i++){
+            dfs(0, 0, i);
+        }
+
+        System.out.println(result);
+    }
+
+    static void dfs(int cur, int count, int total){
+        if(count == total){
+            //차이 계산
+            int sum = 0;
+            int totalS = 1;
+            int totalB = 0;
+            for(int i = 0; i<select.length; i++){
+                if(select[i]){
+                    totalS *= taste.get(i)[0];
+                    totalB += taste.get(i)[1];
+                }
+            }
+
+            sum = Math.abs(totalS - totalB);
+            if(sum < result) result = sum;
+            return;
+        }
+
+        for(int i = cur; i<taste.size(); i++){
+            if(select[i]) continue;
+
+            select[i] = true;
+            dfs(i+1, count+1, total);
+
+            select[i] = false;
+        }
+    }
 }
