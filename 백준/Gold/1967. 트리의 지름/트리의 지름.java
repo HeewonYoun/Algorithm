@@ -6,7 +6,8 @@ public class Main {
     static int N;
     static List<Node>[] list;
     static boolean[] visited;
-    static int result;
+    static int maxDist = 0;
+    static int farthestNode = 0;
 
     static class Node{
         int index;
@@ -39,26 +40,30 @@ public class Main {
             list[b].add(new Node(a, dist));
         }
 
-        for(int i = 1; i<=N; i++){
-            visited = new boolean[N+1];
+        //임의의 노드에서 가장 먼 노드 찾기
+        visited = new boolean[N+1];
+        dfs(1, 0);
 
-            visited[i] = true;
-            dfs(i, 0);
-        }
+        //첫 번째 DFS에서 찾은 노드(farthestNode)에서 가장 먼 노드 찾기
+        visited = new boolean[N+1];
+        maxDist  = 0;
+        dfs(farthestNode, 0);
 
-        System.out.println(result);
+        System.out.println(maxDist);
     }
 
-    static void dfs(int idx, int sum){
-        result = Math.max(result, sum);
+    static void dfs(int idx, int dist){
+        if (dist > maxDist) {
+            maxDist = dist;
+            farthestNode = idx;
+        }
 
-        for(Node next : list[idx]){
-            if(visited[next.index]) continue;
+        visited[idx] = true;
 
-            visited[next.index] = true;
-            dfs(next.index, sum + next.dist);
-
-            visited[next.index] = false;
+        for (Node next : list[idx]) {
+            if (!visited[next.index]) {
+                dfs(next.index, dist + next.dist);
+            }
         }
     }
 }
