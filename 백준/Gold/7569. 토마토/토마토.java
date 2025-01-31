@@ -3,78 +3,77 @@ import java.util.*;
 
 public class Main {
 
-	public static void main(String[] args) throws IOException {
+    static int M, N, H;
+    static int[][][] box;
+    static int result = 0;
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
+    //상하좌우, 위 아래
+    static int[] dx = {-1, 1, 0, 0, 0, 0};
+    static int[] dy = {0, 0, -1, 1, 0, 0};
+    static int[] dh = {0, 0, 0, 0, -1, 1};
 
-		int M = Integer.parseInt(st.nextToken()); // 가로칸수
-		int N = Integer.parseInt(st.nextToken()); // 세로칸수
-		int H = Integer.parseInt(st.nextToken()); // 쌓아올리는 상자수
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-		int[][][] box = new int[H][N][M];
-		int[][][] vis = new int[H][N][M];
-		Queue<int[]> q = new ArrayDeque<int[]>();
+        M = Integer.parseInt(st.nextToken()); //열
+        N = Integer.parseInt(st.nextToken()); //행
+        H = Integer.parseInt(st.nextToken()); //쌓아올려지는 상자 수
 
-		for (int i = 0; i < H; i++) {
-			for (int j = 0; j < N; j++) {
-				st = new StringTokenizer(br.readLine());
-				for (int k = 0; k < M; k++) {
-					box[i][j][k] = Integer.parseInt(st.nextToken());
-					
-					if(box[i][j][k] == 1) {
-						q.offer(new int[] {i,j,k});
-						vis[i][j][k] = 1;
-					}
-				}
-			}
-		}
+        box = new int[H][N][M];
 
-		int[] dx = { 0, 0, -1, 1, 0, 0 }; // 왼, 오, 앞, 뒤, 위, 아래
-		int[] dy = { -1, 1, 0, 0, 0, 0 };
-		int[] dz = { 0, 0, 0, 0, -1, 1 };
+        int count = 0; //안익은 토마토 count
+        Queue<int[]> q = new LinkedList<>();
 
-		int[] c;
-		int nx, ny, nz;
-		while(!q.isEmpty()) {
-			c = q.poll();
-			
-			for(int i = 0; i<6; i++) {
-				nz = c[0] + dz[i];
-				nx = c[1] + dx[i];
-				ny = c[2] + dy[i];
-								
-				if(nx < 0 || nx >= N || ny < 0 || ny >= M || nz < 0 || nz >= H) continue;
-//				System.out.println(nx+" "+ny+" "+nz);
-				if(vis[nz][nx][ny] != 0 || box[nz][nx][ny] == -1) continue;
-				
-				q.offer(new int[] {nz, nx, ny});
-				vis[nz][nx][ny] = vis[c[0]][c[1]][c[2]] + 1;
-//				System.out.println(vis[nz][nx][ny]);
-				
-			}
-			
-		}
+        //익은거 1, 안익은거 0, 없는거 -1
+        for(int i = 0; i<H; i++){
+            for(int j = 0; j<N; j++) {
+                st = new StringTokenizer(br.readLine());
+                for (int k = 0; k<M; k++) {
+                    box[i][j][k] = Integer.parseInt(st.nextToken());
 
-		int result = 0;
-		check: for (int i = 0; i < H; i++) {
-			for (int j = 0; j < N; j++) {
-				for (int k = 0; k < M; k++) {
-					
-					if(vis[i][j][k] == 0 && box[i][j][k] != -1) {
-						result = 0;
-						break check;
-					} 
+                    if(box[i][j][k] == 0) count++;
+                    else if(box[i][j][k] == 1) {
+                        q.add(new int[]{i, j, k});
+                    }
+                }
+            }
+        }
 
-					if(vis[i][j][k] > result) {
-						result = vis[i][j][k];
-					}
-				}
-			}
-		}
-		
-		System.out.println(result-1);
+        if (count == 0) { //저장될 때부터 모든 토마토가 익어있는 상태
+            System.out.println(0);
+            return;
+        }
 
-	}
+        while(!q.isEmpty()){
+            int[] cur = q.poll();
 
+            for(int i = 0; i<6; i++){
+                int nh = cur[0] + dh[i];
+                int nx = cur[1] + dx[i];
+                int ny = cur[2] + dy[i];
+
+                if(nx < 0 || ny < 0 || nx >= N || ny >= M || nh < 0 || nh >= H) continue;
+                if(box[nh][nx][ny] == 0) {
+                    q.offer(new int[]{nh, nx, ny});
+                    box[nh][nx][ny] = box[cur[0]][cur[1]][cur[2]] + 1;
+                }
+            }
+        }
+
+        for(int i = 0; i<H; i++){
+            for(int j = 0; j<N; j++) {
+                for (int k = 0; k<M; k++) {
+                    if(box[i][j][k] == 0){
+                        System.out.println(-1);
+                        return;
+                    }
+
+                    result = Math.max(result, box[i][j][k]);
+                }
+            }
+        }
+
+        System.out.println(result-1);
+    }
 }
