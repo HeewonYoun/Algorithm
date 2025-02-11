@@ -3,17 +3,17 @@ import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
-        int T = Integer.parseInt(br.readLine().trim());
+
+        int T = Integer.parseInt(br.readLine());
 
         for(int tc = 0; tc < T; tc++){
             PriorityQueue<Long> pq = new PriorityQueue<>(); //오름차순
+            int K = Integer.parseInt(br.readLine()); //소설을 구성하는 장의 수
 
-            int K = Integer.parseInt(br.readLine().trim()); // 3<= K <= 1,000,000
-
-            st = new StringTokenizer(br.readLine().trim());
+            st = new StringTokenizer(br.readLine());
             for(int i = 0; i<K; i++){
                 long tmp = Integer.parseInt(st.nextToken());
                 pq.offer(tmp);
@@ -28,6 +28,7 @@ public class Main {
                     System.out.println(total);
                     break;
                 }
+                
                 A = pq.poll();
                 B = pq.poll();
 
